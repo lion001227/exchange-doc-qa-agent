@@ -1,16 +1,59 @@
 services:
-  product-qa-agent:
+  # ==========================
+  # fastapi后端
+  # ==========================
+  backend:
     build: .
-    container_name: product-qa-agent
+    container_name: product-qa-backend
+
+    command: >
+      uvicorn backend.main:app
+      --host 0.0.0.0
+      --port 8000
 
     ports:
-      - "8501:8501"
+      - "8000:8000"
 
     env_file:
       - .env.docker
+
+    environment:
+      DB_HOST: host.docker.internal
+      REDIS_HOST: host.docker.internal
+      REDIS_PORT: 6379
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
     volumes:
       - ./models:/app/models
       - ./vector_db:/app/vector_db
       - ./data:/app/data
       - ./langgraph_checkpoints.sqlite:/app/langgraph_checkpoints.sqlite
       - ./evaluation/langgraph_checkpoints.sqlite:/app/evaluation/langgraph_checkpoints.sqlite
+
+    restart: unless-stopped
+
+  # ==========================
+  # 前端
+  # ==========================
+  frontend:
+    build: .
+    container_name: product-qa-frontend
+    command: >
+      streamlit run app.py
+      --server.address=0.0.0.0
+      --server.port=8501
+
+    ports:
+      - "8501:8501"
+
+    environment:
+      API_URL: http://backend:8000/api
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+

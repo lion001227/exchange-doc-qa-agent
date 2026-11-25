@@ -74,6 +74,7 @@ supervisor_prompt="""
 - 深交所最新公告
 - 某股票最新公告
 
+只输出纯文本。
 只返回一个单词：
 
 rag
@@ -97,6 +98,7 @@ rag_prompt="""
 如果用户的问题依赖之前的对话，请结合历史上下文理解问题。
 
 不要编造知识库中不存在的信息。
+仅输出纯文本
 """
 
 rag_llm=llm.bind_tools([profile_search])
@@ -121,6 +123,7 @@ source_prompt="""
 必须调用 return_document_sources。
 
 Tool 返回的内容应该直接返回给用户，不要修改。
+仅输出纯文本
 """
 source_llm=llm.bind_tools([return_document_sources])
 def source_agent(state:AgentState):
@@ -141,6 +144,7 @@ announcement_prompt="""
 不要混用两个交易所。
 
 如果用户没有明确指定交易所，根据上下文判断。
+仅输出纯文本。
 """
 announcement_llm=llm.bind_tools([sse_latest_announcements,szse_latest_announcements])
 def announcement_agent(state:AgentState):
@@ -209,3 +213,7 @@ def stream_agent(question:str,thread_id:str):
         is_ai_chunk = isinstance(token, AIMessageChunk)
         if is_agent_response and is_ai_chunk and token.content:
             yield token.content
+
+def delete_agent_thread(thread_id:str):
+    """删除指定会话的LangGraph状态"""
+    checkpointer.delete_thread(thread_id)

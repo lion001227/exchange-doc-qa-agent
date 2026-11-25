@@ -1,0 +1,14 @@
+from pydantic import BaseModel,Field
+
+
+class ChatRequest(BaseModel):
+    question:str= Field(min_length=1,max_length=2000)
+    thread_id:str= Field(min_length=1,max_length=100)
+
+class ChatResponse(BaseModel):
+    answer:str
+    thread_id:str
+    conversation_id:int
+
+
+

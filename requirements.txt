@@ -21,7 +21,23 @@ docx2txt>=0.8
 streamlit>=1.36.0
 python-dotenv>=1.0.1
 
-# 交易所公告接口（agent/tools.py）
+# FastAPI 后端
+fastapi>=0.115.0
+uvicorn>=0.30.0
+pydantic>=2.0.0
+
+# MySQL（backend/core/db_config.py，驱动 mysql+aiomysql）
+sqlalchemy[asyncio]>=2.0.0
+aiomysql>=0.2.0
+
+# Redis 缓存（backend/core/redis_config.py）
+redis>=5.0.0
+
+# 登录：JWT 与密码哈希（backend/utils/security.py）
+PyJWT>=2.8.0
+pwdlib[argon2]>=0.2.0
+
+# HTTP 客户端（前端 app.py、公告工具 agent/tools.py）
 requests>=2.31.0
 
 # 可选：本地运行 1.py 从 ModelScope 下载 BGE 模型时需要

@@ -74,7 +74,8 @@ llm = ChatOpenAI(
 RAG_SYSTEM_PROMPT="""你现在是一名金融领域的专家，根据资料回答问题.请注意：
         1.如果资料中涉及到表格，请确保读到完整的表格，有些表格是跨页的
         2.如果多个文档块包含相关信息，请综合所有信息给出完整答案
-        3.如果资料中没有答案，明确说不知道"""
+        3.如果资料中没有答案，明确说不知道
+        4.仅输出纯文本"""
 
 rag_prompt=ChatPromptTemplate.from_messages([
     ("system",RAG_SYSTEM_PROMPT),
